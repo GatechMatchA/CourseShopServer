@@ -1,6 +1,7 @@
 package edu.gatech.matcha.courseshop.server.controller;
 
 import edu.gatech.matcha.courseshop.server.dto.CourseDto;
+import edu.gatech.matcha.courseshop.server.dto.CourseProfessorDto;
 import edu.gatech.matcha.courseshop.server.response.Response;
 import edu.gatech.matcha.courseshop.server.service.CourseService;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/courses")
@@ -36,6 +39,15 @@ public class CourseController {
             return Response.create(HttpStatus.OK, courseService.getAllCourses());
         }
         return Response.create(HttpStatus.OK, courseService.getCoursesByMajor(major));
+    }
+
+    @RequestMapping(value = "/{courseId}/professors", method = RequestMethod.GET)
+    public ResponseEntity getCourseProfessor(@PathVariable long courseId) {
+        List<CourseProfessorDto> list = courseService.getCourseProfessors(courseId);
+        if (list == null) {
+            return Response.create(HttpStatus.NO_CONTENT);
+        }
+        return Response.create(HttpStatus.OK, list);
     }
 
 }
