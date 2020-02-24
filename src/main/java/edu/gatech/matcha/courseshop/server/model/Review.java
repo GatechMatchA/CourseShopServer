@@ -20,7 +20,7 @@ import java.util.Date;
 @Accessors(chain = true)
 @Entity
 @Table(name = "reviews",
-uniqueConstraints = @UniqueConstraint(columnNames = {"course_id", "professor_id", "author_username"}))
+uniqueConstraints = @UniqueConstraint(columnNames = {"course_professor_id", "author_id"}))
 public class Review {
 
     @Id
@@ -28,10 +28,7 @@ public class Review {
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Course course;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Professor professor;
+    private CourseProfessor courseProfessor;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Account author;

@@ -7,15 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import java.util.Set;
 
 @Getter
@@ -24,21 +16,28 @@ import java.util.Set;
 @NoArgsConstructor
 @Accessors(chain = true)
 @Entity
-@Table(name = "courses", uniqueConstraints = @UniqueConstraint(columnNames = "courseCode"), indexes = @Index(columnList = "courseCode"))
+@Table(name = "courses", indexes = @Index(columnList = "code"))
 public class Course {
 
     @Id
+    @GeneratedValue
     private long id;
 
-    private String major;
+    @Column(nullable = false, unique = true)
+    private String code;
 
-    private String courseCode;
+    private String major;
 
     private String title;
 
     private String description;
 
     private int creditHour;
+
+    private String restrictions;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "course")
+    private Set<CourseProfessor> professors;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "course")
     private Set<Section> sections;
@@ -49,6 +48,4 @@ public class Course {
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "prerequisites")
     private Set<Course> dependents;
-
-    private String restrictions;
 }

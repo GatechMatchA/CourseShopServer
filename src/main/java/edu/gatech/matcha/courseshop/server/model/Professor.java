@@ -7,9 +7,12 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -27,4 +30,7 @@ public class Professor {
     private String lastName;
 
     private String firstName;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "professor")
+    private Set<CourseProfessor> courses;
 }
