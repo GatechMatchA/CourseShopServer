@@ -1,6 +1,5 @@
 package edu.gatech.matcha.courseshop.server.controller;
 
-import edu.gatech.matcha.courseshop.server.dto.AccountDto;
 import edu.gatech.matcha.courseshop.server.request.AccountRequest;
 import edu.gatech.matcha.courseshop.server.response.Response;
 import edu.gatech.matcha.courseshop.server.service.AccountService;
@@ -25,9 +24,7 @@ public class AccountController {
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public ResponseEntity signup(@RequestBody @Valid AccountRequest request) {
-        if (accountService.signup(new AccountDto()
-                                  .setUsername(request.getUsername())
-                                  .setPassword(request.getPassword()))) {
+        if (accountService.signup(request)) {
             return Response.create(HttpStatus.OK);
         } else {
             return Response.create(HttpStatus.BAD_REQUEST, "Unable to register.");
@@ -36,9 +33,7 @@ public class AccountController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity login(@RequestBody @Valid AccountRequest request) {
-        if (accountService.login(new AccountDto()
-                                 .setUsername(request.getUsername())
-                                 .setPassword(request.getPassword()))) {
+        if (accountService.login(request)) {
             return Response.create(HttpStatus.OK);
         } else {
             return Response.create(HttpStatus.UNAUTHORIZED, "Invalid credentials.");

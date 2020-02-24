@@ -1,8 +1,8 @@
 package edu.gatech.matcha.courseshop.server.service;
 
-import edu.gatech.matcha.courseshop.server.dto.AccountDto;
 import edu.gatech.matcha.courseshop.server.model.Account;
 import edu.gatech.matcha.courseshop.server.repository.AccountRepository;
+import edu.gatech.matcha.courseshop.server.request.AccountRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,24 +19,25 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean signup(AccountDto accountDto) {
+    public boolean signup(AccountRequest accountRequest) {
 
-        if (accountRepository.existsByUsername(accountDto.getUsername())) {
+        if (accountRepository.existsByUsername(accountRequest.getUsername())) {
             return false;
         }
 
-        accountRepository.saveAndFlush(new Account().setUsername(accountDto.getUsername())
-                                                    .setPassword(passwordEncoder.encode(accountDto.getPassword())));
+        accountRepository.saveAndFlush(new Account().setUsername(accountRequest.getUsername())
+                                                    .setPassword(passwordEncoder.encode(accountRequest.getPassword())));
 
         return true;
     }
 
     @Override
-    public boolean login(AccountDto accountDto) {
-        Account account = accountRepository.findByUsername(accountDto.getUsername()).orElse(null);
+    public boolean login(AccountRequest accountRequest) {
+        Account account = accountRepository.findByUsername(accountRequest.getUsername())
+                                           .orElse(null);
         if (account == null) {
             return false;
         }
-        return passwordEncoder.matches(accountDto.getPassword(), account.getPassword());
+        return passwordEncoder.matches(accountRequest.getPassword(), account.getPassword());
     }
 }
