@@ -5,6 +5,7 @@ import edu.gatech.matcha.courseshop.server.request.AccountRequest;
 import edu.gatech.matcha.courseshop.server.response.Response;
 import edu.gatech.matcha.courseshop.server.service.AccountService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,24 +24,24 @@ public class AccountController {
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public Response signup(@RequestBody @Valid AccountRequest request) {
+    public ResponseEntity signup(@RequestBody @Valid AccountRequest request) {
         if (accountService.signup(new AccountDto()
                                   .setUsername(request.getUsername())
                                   .setPassword(request.getPassword()))) {
-            return Response.withStatus(HttpStatus.OK);
+            return Response.create(HttpStatus.OK);
         } else {
-            return Response.withStatus(HttpStatus.BAD_REQUEST).addError("Unable to register");
+            return Response.create(HttpStatus.BAD_REQUEST, "Unable to register.");
         }
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public Response login(@RequestBody @Valid AccountRequest request) {
+    public ResponseEntity login(@RequestBody @Valid AccountRequest request) {
         if (accountService.login(new AccountDto()
                                  .setUsername(request.getUsername())
                                  .setPassword(request.getPassword()))) {
-            return Response.withStatus(HttpStatus.OK);
+            return Response.create(HttpStatus.OK);
         } else {
-            return Response.withStatus(HttpStatus.UNAUTHORIZED).addError("Invalid credentials.");
+            return Response.create(HttpStatus.UNAUTHORIZED, "Invalid credentials.");
         }
     }
 }
