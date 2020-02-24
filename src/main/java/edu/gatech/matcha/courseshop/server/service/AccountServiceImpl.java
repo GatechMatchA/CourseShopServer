@@ -21,7 +21,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public boolean signup(AccountDto accountDto) {
 
-        if (accountRepository.existsById(accountDto.getUsername())) {
+        if (accountRepository.existsByUsername(accountDto.getUsername())) {
             return false;
         }
 
@@ -33,7 +33,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public boolean login(AccountDto accountDto) {
-        Account account = accountRepository.findById(accountDto.getUsername()).orElse(null);
+        Account account = accountRepository.findByUsername(accountDto.getUsername()).orElse(null);
         if (account == null) {
             return false;
         }
