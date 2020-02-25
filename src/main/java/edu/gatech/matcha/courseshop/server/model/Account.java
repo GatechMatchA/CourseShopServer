@@ -34,4 +34,7 @@ public class Account {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
     private Set<Review> reviews;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private Set<Vote> votes;
 }

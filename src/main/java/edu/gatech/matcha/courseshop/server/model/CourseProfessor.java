@@ -30,7 +30,7 @@ public class CourseProfessor {
     @Setter
     @NoArgsConstructor
     @Accessors(chain = true)
-    public static class CourseProfessorId implements Serializable {
+    static class CourseProfessorId implements Serializable {
         private Course course;
         private Professor professor;
     }

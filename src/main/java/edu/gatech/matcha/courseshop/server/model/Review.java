@@ -5,15 +5,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -44,9 +38,26 @@ public class Review {
 
     private float easiness;
 
+    @Transient
     private int upvote;
 
+    @Transient
     private int downvote;
 
     private String comment;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "review")
+    private Set<Vote> votes;
+
+    @PostLoad
+    void countVotes() {
+        upvote = (int) votes.stream()
+                            .filter(vote -> vote.getStatus()
+                                                .equals(Vote.Status.UPVOTED))
+                            .count();
+        downvote = (int) votes.stream()
+                              .filter(vote -> vote.getStatus()
+                                                  .equals(Vote.Status.DOWNVOTED))
+                              .count();
+    }
 }
