@@ -11,13 +11,15 @@ public class Response {
     public static <T> ResponseEntity<ResponseBody<T>> create(HttpStatus status, T payload) {
         ResponseBody<T> body = new ResponseBody<>(status);
         body.setPayload(payload);
-        return ResponseEntity.status(status).body(body);
+        return ResponseEntity.status(status)
+                             .body(body);
     }
 
     public static <T> ResponseEntity<ResponseBody<T>> create(HttpStatus status, String errorMessage) {
         ResponseBody<T> body = new ResponseBody<>(status);
         body.setError(errorMessage);
-        return ResponseEntity.status(status).body(body);
+        return ResponseEntity.status(status)
+                             .body(body);
     }
 }
 

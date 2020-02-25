@@ -27,12 +27,18 @@ public class SecurityConfiguration {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
-            http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
-            http.csrf().disable();
-            http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-            http.authorizeRequests().antMatchers("/api/**").permitAll();
-            http.exceptionHandling().authenticationEntryPoint((request, response, exception) ->
-                                                              response.sendError(HttpServletResponse.SC_UNAUTHORIZED, exception.getMessage()));
+            http.cors()
+                .configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
+            http.csrf()
+                .disable();
+            http.sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+            http.authorizeRequests()
+                .antMatchers("/api/**")
+                .permitAll();
+            http.exceptionHandling()
+                .authenticationEntryPoint((request, response, exception) ->
+                                          response.sendError(HttpServletResponse.SC_UNAUTHORIZED, exception.getMessage()));
         }
     }
 }
