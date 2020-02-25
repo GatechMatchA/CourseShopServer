@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -20,7 +21,8 @@ import java.util.Date;
 @Accessors(chain = true)
 @Entity
 @Table(name = "reviews",
-uniqueConstraints = @UniqueConstraint(columnNames = {"course_professor_id", "author_id"}))
+uniqueConstraints = @UniqueConstraint(columnNames = {"author_id", "course_id", "professor_id"}),
+indexes = @Index(columnList = "author_id,course_id,professor_id", unique = true))
 public class Review {
 
     @Id
@@ -28,10 +30,13 @@ public class Review {
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private CourseProfessor courseProfessor;
+    private Account author;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Account author;
+    private Course course;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Professor professor;
 
     private Date timestamp;
 

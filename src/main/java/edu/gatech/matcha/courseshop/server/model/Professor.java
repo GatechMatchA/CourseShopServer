@@ -31,4 +31,7 @@ public class Professor {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "professor")
     private Set<CourseProfessor> courses;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "professor")
+    private Set<Review> reviews;
 }

@@ -18,7 +18,6 @@ public class ReviewDto {
     private long id;
     private long course;
     private long professor;
-    private long courseProfessor;
     private long author;
     private Date timestamp;
     private float quality;
@@ -29,13 +28,9 @@ public class ReviewDto {
 
     public static ReviewDto serialize(Review review) {
         return new ReviewDto().setId(review.getId())
-                              .setCourseProfessor(review.getCourseProfessor()
-                                                        .getId())
-                              .setCourse(review.getCourseProfessor()
-                                               .getCourse()
+                              .setCourse(review.getCourse()
                                                .getId())
-                              .setProfessor(review.getCourseProfessor()
-                                                  .getProfessor()
+                              .setProfessor(review.getProfessor()
                                                   .getId())
                               .setAuthor(review.getAuthor()
                                                .getId())

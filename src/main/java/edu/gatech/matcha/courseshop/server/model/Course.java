@@ -46,4 +46,7 @@ public class Course {
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "prerequisites")
     private Set<Course> dependents;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "course")
+    private Set<Review> reviews;
 }

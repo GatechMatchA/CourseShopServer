@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import edu.gatech.matcha.courseshop.server.model.Course;
 import edu.gatech.matcha.courseshop.server.model.CourseProfessor;
+import edu.gatech.matcha.courseshop.server.model.Professor;
 import edu.gatech.matcha.courseshop.server.model.Section;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -40,7 +41,8 @@ public class CourseDto {
                               .setRestrictions(course.getRestrictions())
                               .setProfessors(course.getProfessors()
                                                    .stream()
-                                                   .map(CourseProfessor::getId)
+                                                   .map(CourseProfessor::getProfessor)
+                                                   .map(Professor::getId)
                                                    .collect(Collectors.toList()))
                               .setSections(course.getSections()
                                                  .stream()

@@ -2,14 +2,15 @@ package edu.gatech.matcha.courseshop.server.service;
 
 import edu.gatech.matcha.courseshop.server.dto.ReviewDto;
 import edu.gatech.matcha.courseshop.server.model.Account;
-import edu.gatech.matcha.courseshop.server.model.CourseProfessor;
+import edu.gatech.matcha.courseshop.server.model.Course;
+import edu.gatech.matcha.courseshop.server.model.Professor;
 import edu.gatech.matcha.courseshop.server.model.Review;
 import edu.gatech.matcha.courseshop.server.repository.AccountRepository;
-import edu.gatech.matcha.courseshop.server.repository.CourseProfessorRepository;
+import edu.gatech.matcha.courseshop.server.repository.CourseRepository;
+import edu.gatech.matcha.courseshop.server.repository.ProfessorRepository;
 import edu.gatech.matcha.courseshop.server.repository.ReviewRepository;
 import edu.gatech.matcha.courseshop.server.request.AccountRequest;
 import edu.gatech.matcha.courseshop.server.request.ReviewRequest;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -18,35 +19,45 @@ import java.util.Date;
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
-
-    private final CourseProfessorRepository courseProfessorRepository;
+    private final CourseRepository courseRepository;
+    private final ProfessorRepository professorRepository;
     private final AccountRepository accountRepository;
 
-    public ReviewServiceImpl(ReviewRepository reviewRepository, CourseProfessorRepository courseProfessorRepository,
-                             @Qualifier("accountRepository") AccountRepository accountRepository) {
+    public ReviewServiceImpl(ReviewRepository reviewRepository, CourseRepository courseRepository,
+                             ProfessorRepository professorRepository, AccountRepository accountRepository) {
         this.reviewRepository = reviewRepository;
-        this.courseProfessorRepository = courseProfessorRepository;
+        this.courseRepository = courseRepository;
+        this.professorRepository = professorRepository;
         this.accountRepository = accountRepository;
     }
 
     @Override
     public ReviewDto createReview(ReviewRequest reviewRequest, AccountRequest accountRequest) {
-        CourseProfessor courseProfessor = courseProfessorRepository.findCourseProfessorByCourseIdAndProfessorId(
-        reviewRequest.getCourse(), reviewRequest.getProfessor())
-                                                                   .orElse(null);
-        if (courseProfessor == null) {
+        Course course = courseRepository.findById(reviewRequest.getCourse())
+                                        .orElse(null);
+        if (course == null) {
             return null;
         }
+
+        Professor professor = professorRepository.findById(reviewRequest.getProfessor())
+                                                 .orElse(null);
+        if (professor == null) {
+            return null;
+        }
+
         Account account = accountRepository.findByUsername(accountRequest.getUsername())
                                            .orElse(null);
         if (account == null) {
             return null;
         }
-        if (reviewRepository.existsByAuthorAndCourseProfessor(account, courseProfessor)) {
+
+        if (reviewRepository.existsByAuthorAndCourseAndProfessor(account, course, professor)) {
             return null;
         }
+
         Review review = new Review().setAuthor(account)
-                                    .setCourseProfessor(courseProfessor)
+                                    .setCourse(course)
+                                    .setProfessor(professor)
                                     .setQuality(reviewRequest.getQuality())
                                     .setEasiness(reviewRequest.getEasiness())
                                     .setComment(reviewRequest.getComment())
