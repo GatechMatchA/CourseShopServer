@@ -35,6 +35,10 @@ public class Review {
 
     private Date timestamp;
 
+    private float quality;
+
+    private float easiness;
+
     private int upvote;
 
     private int downvote;
