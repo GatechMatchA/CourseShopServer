@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/reviews")
@@ -39,5 +41,15 @@ public class ReviewController {
             return Response.create(HttpStatus.BAD_REQUEST, "Invalid arguments: some of courseId, professorId, author must be wrong.");
         }
         return Response.create(HttpStatus.OK, reviewDto);
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity getReviews(@RequestParam(name = "course") long courseId,
+                                     @RequestParam(name = "professor") long professorId) {
+        List<ReviewDto> reviews = reviewService.getReviews(courseId, professorId);
+        if (reviews == null) {
+            return Response.create(HttpStatus.BAD_REQUEST, "Invalid argument(s): course and/or professor does not exist.");
+        }
+        return Response.create(HttpStatus.OK, reviews);
     }
 }

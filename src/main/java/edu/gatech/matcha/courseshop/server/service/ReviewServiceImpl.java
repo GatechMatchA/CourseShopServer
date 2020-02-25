@@ -14,6 +14,8 @@ import edu.gatech.matcha.courseshop.server.request.ReviewRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
@@ -66,5 +68,25 @@ public class ReviewServiceImpl implements ReviewService {
                                     .setTimestamp(new Date());
         reviewRepository.saveAndFlush(review);
         return ReviewDto.serialize(review);
+    }
+
+    @Override
+    public List<ReviewDto> getReviews(long courseId, long professorId) {
+        Course course = courseRepository.findById(courseId)
+                                        .orElse(null);
+        if (course == null) {
+            return null;
+        }
+
+        Professor professor = professorRepository.findById(professorId)
+                                                 .orElse(null);
+        if (professor == null) {
+            return null;
+        }
+
+        return reviewRepository.findAllByCourseAndProfessor(course, professor)
+                               .stream()
+                               .map(ReviewDto::serialize)
+                               .collect(Collectors.toList());
     }
 }
