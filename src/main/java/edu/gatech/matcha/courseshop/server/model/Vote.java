@@ -8,8 +8,8 @@ import lombok.experimental.Accessors;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -20,15 +20,17 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Accessors(chain = true)
 @Entity
-@IdClass(Vote.VoteId.class)
-@Table(name = "votes", indexes = @Index(columnList = "user_id,review_id", unique = true))
+@Table(name = "votes",
+indexes = @Index(columnList = "user_id,review_id", unique = true))
 public class Vote {
 
     @Id
+    @GeneratedValue
+    private long id;
+
     @ManyToOne
     private Account user;
 
-    @Id
     @ManyToOne
     private Review review;
 
