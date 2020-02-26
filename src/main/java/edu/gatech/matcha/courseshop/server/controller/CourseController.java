@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -38,11 +39,20 @@ public class CourseController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity getCourses(@RequestParam(name = "major", required = false) String major) {
-        if (major == null) {
-            return Response.create(HttpStatus.OK, courseService.getAllCourses());
+    public ResponseEntity getCourses(@RequestParam(name = "major", required = false) String major,
+                                     @RequestParam(name = "orderBy", required = false) String field) {
+        List<CourseDto> list;
+        if (major != null) {
+            list = courseService.getCoursesByMajor(major);
+        } else {
+            list = courseService.getAllCourses();
         }
-        return Response.create(HttpStatus.OK, courseService.getCoursesByMajor(major));
+        if (field != null) {
+            if (field.equals("code")) {
+                list.sort(Comparator.comparing(CourseDto::getCode));
+            }
+        }
+        return Response.create(HttpStatus.OK, list);
     }
 
     @RequestMapping(value = "/{courseId}/professors", method = RequestMethod.GET)
