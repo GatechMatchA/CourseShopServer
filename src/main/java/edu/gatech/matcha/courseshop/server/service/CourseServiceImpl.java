@@ -1,7 +1,6 @@
 package edu.gatech.matcha.courseshop.server.service;
 
 import edu.gatech.matcha.courseshop.server.dto.CourseDto;
-import edu.gatech.matcha.courseshop.server.dto.CourseProfessorDto;
 import edu.gatech.matcha.courseshop.server.model.Course;
 import edu.gatech.matcha.courseshop.server.repository.CourseRepository;
 import org.springframework.stereotype.Service;
@@ -13,9 +12,11 @@ import java.util.stream.Collectors;
 public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
+    private final CourseProfessorService courseProfessorService;
 
-    public CourseServiceImpl(CourseRepository courseRepository) {
+    public CourseServiceImpl(CourseRepository courseRepository, CourseProfessorService courseProfessorService) {
         this.courseRepository = courseRepository;
+        this.courseProfessorService = courseProfessorService;
     }
 
     @Override
@@ -40,16 +41,5 @@ public class CourseServiceImpl implements CourseService {
                                .stream()
                                .map(CourseDto::serialize)
                                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<CourseProfessorDto> getCourseProfessors(long courseId) {
-        Course course = courseRepository.findById(courseId)
-                                        .orElse(null);
-        if (course == null) return null;
-        return course.getProfessors()
-                     .stream()
-                     .map(CourseProfessorDto::serialize)
-                     .collect(Collectors.toList());
     }
 }

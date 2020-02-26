@@ -3,6 +3,7 @@ package edu.gatech.matcha.courseshop.server.controller;
 import edu.gatech.matcha.courseshop.server.dto.CourseDto;
 import edu.gatech.matcha.courseshop.server.dto.CourseProfessorDto;
 import edu.gatech.matcha.courseshop.server.response.Response;
+import edu.gatech.matcha.courseshop.server.service.CourseProfessorService;
 import edu.gatech.matcha.courseshop.server.service.CourseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +20,12 @@ import java.util.List;
 public class CourseController {
 
     private final CourseService courseService;
+    private final CourseProfessorService courseProfessorService;
 
-    public CourseController(CourseService courseService) {
+    public CourseController(CourseService courseService,
+                            CourseProfessorService courseProfessorService) {
         this.courseService = courseService;
+        this.courseProfessorService = courseProfessorService;
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -42,12 +46,22 @@ public class CourseController {
     }
 
     @RequestMapping(value = "/{courseId}/professors", method = RequestMethod.GET)
-    public ResponseEntity getCourseProfessor(@PathVariable long courseId) {
-        List<CourseProfessorDto> list = courseService.getCourseProfessors(courseId);
+    public ResponseEntity getCourseProfessors(@PathVariable long courseId) {
+        List<CourseProfessorDto> list = courseProfessorService.getCourseProfessors(courseId);
         if (list == null) {
             return Response.create(HttpStatus.NO_CONTENT);
         }
         return Response.create(HttpStatus.OK, list);
+    }
+
+    @RequestMapping(value = "/{courseId}/professors/{professorId}", method = RequestMethod.GET)
+    public ResponseEntity getCourseProfessor(@PathVariable long courseId,
+                                             @PathVariable long professorId) {
+        CourseProfessorDto courseProfessorDto = courseProfessorService.getCourseProfessor(courseId, professorId);
+        if (courseProfessorDto == null) {
+            return Response.create(HttpStatus.NO_CONTENT);
+        }
+        return Response.create(HttpStatus.OK, courseProfessorDto);
     }
 
 }

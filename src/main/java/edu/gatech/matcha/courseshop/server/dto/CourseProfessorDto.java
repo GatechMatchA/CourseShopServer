@@ -22,6 +22,10 @@ public class CourseProfessorDto {
     private GradeDistribution gradeDistribution;
     private List<Long> reviews;
 
+    // not part of model class
+    private float averageQuality;
+    private float averageEasiness;
+
     public static CourseProfessorDto serialize(CourseProfessor courseProfessor) {
         return new CourseProfessorDto().setCourse(courseProfessor.getCourse()
                                                                  .getId())
